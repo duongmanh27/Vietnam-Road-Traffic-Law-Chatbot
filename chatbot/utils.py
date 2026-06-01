@@ -5,9 +5,18 @@ prompt_rewrite_query = """
         QUY TẮC TƯ DUY VÀ PHIÊN DỊCH TỔNG QUÁT:
         1. Gắn kết ngữ cảnh: Phân tích [Lịch sử trò chuyện] để bổ sung đối tượng/hành vi bị thiếu nếu câu hỏi dùng từ thay thế (VD: "nó", "thế còn", "vậy thì...").
         2. Kế thừa phương tiện: Nếu câu hỏi hiện tại KHÔNG nhắc đến loại phương tiện giao thông, BẮT BUỘC phải tìm và lấy phương tiện được nhắc đến GẦN NHẤT trong lịch sử trò chuyện để đưa vào từ khóa (VD: Câu 1 hỏi ô tô, Câu 2 hỏi gây tai nạn chết người -> tự động bổ sung từ khóa "xe ô tô" vào Câu 2).
-        3. Dịch từ lóng/khẩu ngữ: Tự động phân tích ý nghĩa của các từ lóng (VD: bốc đầu, lạng lách, đánh võng, kẹp 3, bắn tốc độ, phạt nguội, xe không chính chủ,...) và chuyển thành mô tả hành vi vi phạm chính thức trong luật.
+       # Hãy cập nhật mục 3 trong Master Prompt của bạn thành như sau:
+
+        3. QUY CHIẾU HÀNH VI LÕI & DÂN SỰ MỞ RỘNG (Core Violations & Civil):
+           - Hành vi mượn/giao chìa khóa/cho mượn xe: DỊCH THÀNH -> "giao xe cho người không đủ điều kiện điều khiển".
+           - Trạng thái chưa đủ tuổi/chưa thi/quên mang giấy tờ: DỊCH THÀNH -> "người chưa đủ tuổi điều khiển", "không có giấy phép lái xe", "không mang theo giấy tờ".
+           - Yêu cầu đền bù/bắt đền/trả tiền đối với người lái xe: DỊCH THÀNH -> "bồi thường thiệt hại", "trách nhiệm dân sự".
+           - ĐẶC BIỆT: Nếu câu hỏi có yếu tố "cho mượn xe/giao xe" VÀ "gây tai nạn/bắt đền chủ xe": BẮT BUỘC DỊCH THÀNH -> "chủ phương tiện liên đới bồi thường thiệt hại", "trách nhiệm của chủ phương tiện".
+           - Nếu tai nạn do phương tiện (ô tô, xe máy) đang di chuyển gây ra: BẮT BUỘC THÊM CỤM -> "bồi thường thiệt hại do nguồn nguy hiểm cao độ gây ra".
         4. Dịch danh từ: Cập nhật các danh từ thông tục hoặc từ cũ thành thuật ngữ hành chính mới nhất (VD: chuyển các loài vật thành "vật nuôi", "động vật"; chuyển "xe máy" thành "xe mô tô, xe gắn máy").
-        5. Khái quát hóa lỗi: Phân tích hành vi để tìm ra bản chất pháp lý (VD: "thiếu quan sát", "không phanh kịp" -> "không chú ý quan sát", "không giảm tốc độ", "không giữ khoảng cách an toàn").
+        5. TRÍCH XUẤT HẬU QUẢ TỐI ĐA (Consequence Extraction):
+           - Cứ có va chạm, đâm đụng, thương vong: BẮT BUỘC THÊM CỤM -> "gây tai nạn giao thông", "thiệt hại tài sản".
+           - Nếu có nhắc đến bảo hiểm + vi phạm nặng (say xỉn, không bằng lái, bỏ trốn): BẮT BUỘC THÊM CỤM -> "loại trừ trách nhiệm bảo hiểm", "không bồi thường thiệt hại".
         6. Trích xuất cả hậu quả: Nếu có yếu tố chết người, thương tích, hỏng hóc, phải chuyển thành "gây tai nạn giao thông", "hậu quả chết người", "thiệt hại tài sản".
 
         YÊU CẦU ĐẦU RA BẮT BUỘC:
@@ -92,6 +101,12 @@ def return_prompt_result(user_question, json_result):
                 3. Trích dẫn chính xác mức phạt Hành chính/Hình sự/Dân sự cho mỗi lỗi hoặc trách nhiệm đền bù nếu có dựa trên dữ liệu luật.
                 4. Nhấn mạnh ngoại lệ (nếu có): Ví dụ, khi nào vượt phải là sai, khi nào vượt phải lại được coi là "đi nhanh hơn trên làn bên phải" theo luật.
                 5. Kết luận rõ ràng: Chốt lại ai bị phạt, ai không bị phạt. Nếu dữ liệu không có thông tin cơ quan xử phạt, hãy trả lời theo kiến thức chung (VD: Cảnh sát giao thông).
+
+                [KỶ LUẬT THÉP KHI ĐỌC VĂN BẢN LUẬT - BẮT BUỘC TUÂN THỦ]:
+                1. CHỐNG ẢO GIÁC ĐIỀU KHOẢN: Khi áp dụng mức phạt tiền, hình phạt bổ sung (tịch thu, tước bằng) hoặc TRỪ ĐIỂM, bạn PHẢI đối chiếu CHÍNH XÁC TỪNG CHỮ cái Điểm/Khoản của hành vi đó. 
+                2. KHÔNG SUY DIỄN CHÉO: Nếu ngữ cảnh ghi "Điểm a, b, c bị trừ 2 điểm", tuyệt đối KHÔNG được áp dụng mức trừ điểm đó cho "Điểm d". Nếu ngữ cảnh không nhắc đến việc trừ điểm cho hành vi đó, hãy dõng dạc trả lời: "Pháp luật hiện hành không quy định trừ điểm/tước bằng cho hành vi này".
+                3. Chỉ sử dụng thông tin từ [NGỮ CẢNH], tuyệt đối không tự bịa ra mức phạt.
+                4. NGÔN TỪ DỨT KHOÁT PHÁP LÝ: Nếu [NGỮ CẢNH] quy định rõ các trường hợp "Loại trừ trách nhiệm bảo hiểm" hoặc "Không bồi thường" (như người lái không có bằng lái, có cồn), bạn PHẢI khẳng định dứt khoát là "Bảo hiểm sẽ TỪ CHỐI bồi thường". TUYỆT ĐỐI KHÔNG dùng các từ ngữ gây hiểu lầm như "có thể xem xét", "có khả năng bị giảm trừ". Luật pháp là trắng đen rõ ràng.
                     """.format(user_question, json_result)
     return prompt_return_result
 

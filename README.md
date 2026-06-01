@@ -98,8 +98,7 @@ Standard OCR tools (EasyOCR/Tesseract) often fail to preserve complex table stru
 
 1. **Clone the repository:**
    ```bash
-   git clone [https://github.com/yourusername/vietnam-traffic-law-graphrag.git](https://github.com/yourusername/vietnam-traffic-law-graphrag.git)
-   cd vietnam-traffic-law-graphrag```
+   https://github.com/duongmanh27/Vietnam-Road-Traffic-Law-Chatbot.git```
 2. **Install dependencies:**
 ```bash
    pip install -r requirements.txt
