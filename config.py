@@ -3,7 +3,7 @@ import os
 import yaml
 import logging
 # path_save_json
-folder_weight = "/home/manh/Code/my_final_project/weight"
+folder_weight = "/home/manh/Code/traffic_law_chatbot/weight"
 path_save_json = "folder_save_json_12_2"
 
 

@@ -72,7 +72,7 @@ Standard OCR tools (EasyOCR/Tesseract) often fail to preserve complex table stru
 
 ### 4. Detailed Legal Analysis Generation
 <p align="center">
-  <img src="images/manhinh_ketqua.jpg" width="100%" alt="Text Analysis Result">
+  <img src="images/manhinh_ketqua.png" width="100%" alt="Text Analysis Result">
 </p>
 
 > **Scenario-based Reasoning:** The LLM acts as a Legal Expert/Judge, breaking down complex scenarios based strictly on the Neo4j Knowledge Graph to prevent hallucinations.
@@ -117,5 +117,6 @@ python app.py
 👨‍💻 Author & Contact
 Dương Mạnh AI / Data Engineer Passionate about System Design, Graph Databases, and applied Machine Learning.
 
-💡 Note on Model Weights: > The pre-trained weights for the custom OCR models (YOLOv8 & CRNN) and GraphSAGE are not included in this repository due to size limitations and intellectual property. If you would like to obtain the model weights to fully run this system, please feel free to contact me via email at: > 📧 duongmanh608@gmail.com
-# Vietnam-Road-Traffic-Law-Chatbot
+💡 Note on Model Weights:
+The pre-trained weights for the custom OCR models (YOLOv8 & CRNN) and GraphSAGE are not included in this repository due to size limitations and intellectual property. If you would like to obtain the **FREE** model weights to fully run this system, please feel free to contact me via email at:
+📧 duongmanh608@gmail.com
