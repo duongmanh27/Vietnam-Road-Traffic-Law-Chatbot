@@ -120,3 +120,4 @@ Dương Mạnh AI / Data Engineer Passionate about System Design, Graph Database
 💡 Note on Model Weights:
 The pre-trained weights for the custom OCR models (YOLOv8 & CRNN) and GraphSAGE are not included in this repository due to size limitations and intellectual property. If you would like to obtain the **FREE** model weights to fully run this system, please feel free to contact me via email at:
 📧 duongmanh608@gmail.com
+Link drive: https://drive.google.com/drive/folders/1g40KVVZwcCJIifaaxU8GXI_iCjD1VV0h?usp=sharing
